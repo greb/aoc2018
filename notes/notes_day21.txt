@@ -1,0 +1,70 @@
+#ip 2
+
+# Checks if AND runs correctly, otherwise a lot of loops
+00 ['seti', 123, 0, 3]          r3 = 0x007b
+01 ['bani', 3, 456, 3]          r3 = r3 & 0x01c8
+02 ['eqri', 3, 72, 3]           r3 = r3 == 0x48
+03 ['addr', 3, 2, 2]            ip = r3 + ip        # jump to 5 if r3 == 0x48
+04 ['seti', 0, 0, 2]            ip = 0              # jump to 1
+
+# Func
+05 ['seti', 0, 0, 3]            r3 = 0
+06 ['bori', 3, 65536, 1]        r1 = r3 | 0x10000
+07 ['seti', 4921097, 0, 3]      r3 = 0x4b1709
+08 ['bani', 1, 255, 4]          r4 = r1 & 0xff
+09 ['addr', 3, 4, 3]            r3 = r3 + r4
+10 ['bani', 3, 16777215, 3]     r3 = r3 & 0xffffff
+11 ['muli', 3, 65899, 3]        r3 = r3 * 0x1016b
+12 ['bani', 3, 16777215, 3]     r3 = r3 & 0xffffff
+13 ['gtir', 256, 1, 4]          r4 = 256 > r1
+14 ['addr', 4, 2, 2]            ip = r4 + ip        # jump to 16 if 256 > r1
+15 ['addi', 2, 1, 2]            ip = ip + 1         # jump to 17
+16 ['seti', 27, 8, 2]           ip = 27             # jump to 28
+17 ['seti', 0, 5, 4]            r4 = 0
+18 ['addi', 4, 1, 5]            r5 = r4 + 1
+19 ['muli', 5, 256, 5]          r5 = r5 * 0x100
+20 ['gtrr', 5, 1, 5]            r5 = r5 > r1
+21 ['addr', 5, 2, 2]            ip = r5 + ip        # jump to 23 if r5 > r1
+22 ['addi', 2, 1, 2]            ip = ip + 1         # jump to 24
+23 ['seti', 25, 1, 2]           ip = 25             # jump to 26
+24 ['addi', 4, 1, 4]            r4 = r4 + 1
+25 ['seti', 17, 8, 2]           ip = 17             # jump to 18
+26 ['setr', 4, 3, 1]            r1 = r4
+27 ['seti', 7, 9, 2]            ip = 7              # jump to 8
+28 ['eqrr', 3, 0, 4]            r4 = r3 == r0       
+29 ['addr', 4, 2, 2]            ip = r4 + ip        # jump to 31 if r3 == r0
+30 ['seti', 5, 4, 2]            ip = 5              # jump to 6
+
+
+
+    def raw_func():
+05:     r3 = 0
+
+30:     while True:
+06:         r1 = r3 | 0x10000
+07:         r3 = 0x4b1709
+
+27:         while True:
+08:             r4 = r1 & 0xff
+09:             r3 = r3 + r4
+10:             r3 = r3 & 0xffffff
+11:             r3 = r3 * 0x1016b
+12:             r3 = r3 & 0xffffff
+
+13,14:          if 256 > r1:
+16:                break
+15:
+17:             r4 = 0
+                while True:
+18:                 r5 = r4 + 1
+19:                 r5 = r5 * 0x100
+
+20,21,23:           if r5 > r1:
+26:                     r1 = r4
+2727:                   break
+                    
+24:                 r4 = r4 + 1
+
+28:          if r3 == r0:
+29:              break
+

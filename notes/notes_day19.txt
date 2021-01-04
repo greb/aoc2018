@@ -1,0 +1,62 @@
+0=a, 1=b, 2=c, 3=d, 4=e, 5=pc
+
+00 ('addi', 5, 16, 5) #pc
+01 ('seti', 1, 9, 1)      b=1
+02 ('seti', 1, 5, 4)      e=1
+03 ('mulr', 1, 4, 3)      d = b * e
+04 ('eqrr', 3, 2, 3)      d = d == c
+05 ('addr', 3, 5, 5) #pc  pc = d + pc  jump to 7 if d == c
+06 ('addi', 5, 1, 5) #pc  pc = pc+1    jump to 8
+07 ('addr', 1, 0, 0)      a = b+a
+08 ('addi', 4, 1, 4)      e = e+1
+09 ('gtrr', 4, 2, 3)      d = e > c
+10 ('addr', 5, 3, 5) #pc  pc = pc + d  jump to 12 if e > c
+11 ('seti', 2, 4, 5)      pc = 2       jump to 3
+12 ('addi', 1, 1, 1)      b = b+1
+13 ('gtrr', 1, 2, 3)      d = b > c
+14 ('addr', 3, 5, 5) #pc  pc = d + pc  jump to 16 if b > c
+15 ('seti', 1, 9, 5) #pc  pc = 1       jump to 2
+16 ('mulr', 5, 5, 5) #pc  pc = pc*pc -> End
+
+def func(c):
+    b = 1
+
+    while True:
+        e = 1
+
+        while True:
+            d = b*e
+            if d == c:
+                a += b
+            e += 1
+
+            if e > c:
+                break
+        b += 1
+
+        if b > c:
+            break
+
+    return a
+
+
+Init
+17 ('addi', 2, 2, 2)      c = c+2;
+18 ('mulr', 2, 2, 2)      c = c*c;
+19 ('mulr', 5, 2, 2)      c = pc*c;
+20 ('muli', 2, 11, 2)     c = c*11;
+21 ('addi', 3, 8, 3)      d = d+8
+22 ('mulr', 3, 5, 3)      d = d*pc
+23 ('addi', 3, 16, 3)     d = d+16
+24 ('addr', 2, 3, 2)      c = c+d
+25 ('addr', 5, 0, 5) #pc  pc = pc+a 
+26 ('seti', 0, 7, 5) #pc   pc=0       Jump to 1
+27 ('setr', 5, 3, 3)      d = pc
+28 ('mulr', 3, 5, 3)      d = d*pc
+29 ('addr', 5, 3, 3)      d = pc+d
+30 ('mulr', 5, 3, 3)      d = pc*d
+31 ('muli', 3, 14, 3)     d = d*14
+32 ('mulr', 3, 5, 3)      d = d*pc
+33 ('addr', 2, 3, 2)      c = c+d
+34 ('seti', 0, 1, 0)      a = 0
+35 ('seti', 0, 6, 5) #pc  pc=0       Jump to 1
